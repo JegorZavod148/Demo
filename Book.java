@@ -2,35 +2,40 @@ public class Book {
 
     String title;
     String author;
-    float price;
+    int year;
 
-      public Book(String title, String author, float price){
-          this.title = title;
-          this.author = author;
-          this.price = price;
-      }
+    public Book(String title, String author, int year) {
+        this.title = title;
+        this.author = author;
+        this.year = year;
+    }
 
-      public void applyDiscount(float discount){
-          if (discount > 0 && discount <= 100) {
-              price -= price * (discount / 100);
-          }
-          else {
-              System.out.println("Такої знижки не може бути.");
-          }
-      }
+    public String getTitle() {
+        return title;
+    }
 
-      public void printInfo(){
-          System.out.println();
-
-          System.out.println("Назва: " + title);
-          System.out.println("Автор: " + author);
-          System.out.println("Ціна: $" + price);
-
-          System.out.println();
-
-      }
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
 
+    public String getAuthor() {
+        return author;
+    }
 
+    public void setAuthor(String author) {
+        this.author = author;
+    }
+
+    public int getYear() {
+        return year;
+    }
+
+    public void setYear(int year) {
+        this.year = year;
+    }
+
+    public String bookInfo() {
+        return "Назва: " + title + "\nАвтор: " + author + "\nРік видання: " + year;
+    }
 }
-
