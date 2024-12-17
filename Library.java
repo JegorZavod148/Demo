@@ -1,37 +1,51 @@
 import java.util.ArrayList;
-class Library {
 
-    static ArrayList<Book> books = new ArrayList<>();
+public class Library {
 
-    public static void addBook(Book book) {
+    ArrayList<Book> books = new ArrayList<>();
+    ArrayList<Reader> readers = new ArrayList<>();
+
+    public void addBook(Book book) {
         books.add(book);
-        System.out.println("Книга додана: " + book.getTitle());
     }
 
-    public static void removeBook(String title) {
-        books.removeIf(book -> book.getTitle().equalsIgnoreCase(title));
-        System.out.println("Книга з назвою \"" + title + "\" видалена.");
+    public void regReader(Reader reader) {
+        readers.add(reader);
     }
 
-    public static void searchByAuthor(String author) {
-        System.out.println("Книги автора \"" + author + "\":");
+    public void giveBook(Reader reader, Book book) {
+        if (books.contains(book)) {
+            reader.borrowBook(book);
+        } else {
+            System.out.println("The book's not available right now.");
+        }
+    }
+
+    public void returnBook(Reader reader, Book book) {
+        reader.returnBook(book);
+    }
+
+    public void printBooks() {
         for (Book book : books) {
-            if (book.getAuthor().equalsIgnoreCase(author)) {
-                System.out.println(book.bookInfo());
+            System.out.println(book.getInfo());
+        }
+    }
+
+    public void genreSearch(String genre) {
+        for (Book book : books) {
+            if (book.getInfo().contains(genre)) {
+                    System.out.println(book.getInfo());
             }
         }
     }
 
-    public static void searchByTitle(String title) {
+    public void subjectSearch(String subject) {
         for (Book book : books) {
-            if (book.getTitle().equalsIgnoreCase(title))
-                System.out.println("Знайдена книга: " + book.bookInfo());
-            break;
+            if (book.getInfo().contains(subject)) {
+                    System.out.println(book.getInfo());
+            }
         }
-        System.out.println("Книга з назвою \"" + title + "\" не знайдена.");
     }
 
-    public static int getBookCount() {
-        return books.size();
-    }
+
 }
