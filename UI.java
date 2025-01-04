@@ -1,114 +1,87 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionListener;
 import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
-public class UI extends JFrame implements ActionListener {
+public class UI extends JFrame implements MouseMotionListener {
 
-    private JTextField textField = new JTextField();
-    private String sign;
-    private int num;
+    private Label label = new Label();
+    private int x = 0;
+    private int y = 0;
+    private Color currentColor = Color.BLACK;
+    private int brushSize = 2;
 
-    public UI() {
-        setTitle("Calculator");
-        setSize(400, 600);
+    UI() {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setLayout(new BorderLayout());
+        setSize(500, 700);
+        addMouseMotionListener(this);
+        setLayout(null);
 
-        JPanel topPanel = new JPanel();
-        topPanel.setLayout(new BorderLayout());
-        topPanel.setBackground(Color.WHITE);
+        label.setBounds(20,20,200,100);
+        add(label);
 
-        textField.setHorizontalAlignment(JTextField.RIGHT);
-        textField.setEditable(false);
-        textField.setBackground(Color.DARK_GRAY);
-        textField.setForeground(Color.GREEN);
-        add(textField, BorderLayout.NORTH);
+        JButton button = new JButton();
+        button.setText("ERASE");
+        button.setBounds(100, 150, 100, 50);
+        button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Graphics g = getGraphics();
 
-        JPanel panel = new JPanel();
-        panel.setLayout(new GridLayout(5, 4, 5, 5));
-        panel.setBackground(Color.WHITE);
+                g.setColor(Color.WHITE);
+                g.fillRect(0, 0, 500, 700);
+            }
+        });
+        add(button);
 
-        String[] buttonLabels = {
-                "7", "8", "9", "/",
-                "4", "5", "6", "*",
-                "1", "2", "3", "-",
-                "+/-", "0", "=", "+",
-                "del", "%", "√", "x^2"
-        };
+        JButton colorButton = new JButton("COLOR");
+        colorButton.setBounds(100, 220, 100, 50);
+        colorButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                currentColor = JColorChooser.showDialog(null, "Choose a color", currentColor);
+                if (currentColor == null) {
+                    currentColor = Color.BLACK;
+                }
+            }
+        });
+        add(colorButton);
 
-        for (String label : buttonLabels) {
-            JButton button = new JButton(label);
-            button.setBackground(Color.DARK_GRAY);
-            button.setForeground(Color.GREEN);
-            button.addActionListener(this);
-            panel.add(button);
-        }
+        JButton sizeButton = new JButton("BRUSH SIZE");
+        sizeButton.setBounds(100, 290, 100, 50);
+        sizeButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String input = JOptionPane.showInputDialog("Введіть розмір кисті:");
+                    int newSize = Integer.parseInt(input);
+                    if (newSize > 0 && newSize <= 20) {
+                        brushSize = newSize;
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Ти сліпий? Написано від 1 до 20");
+                    }
+            }
+        });
+        add(sizeButton);
 
-        add(panel, BorderLayout.CENTER);
 
-        getContentPane().setBackground(Color.WHITE);
         setVisible(true);
     }
 
     @Override
-    public void actionPerformed(ActionEvent e){
-        switch (e.getActionCommand()){
-            case "7" -> textField.setText(textField.getText()+"7");
-            case "4" -> textField.setText(textField.getText()+"4");
-            case "1" -> textField.setText(textField.getText()+"1");
-            case "8" -> textField.setText(textField.getText()+"8");
-            case "5" -> textField.setText(textField.getText()+"5");
-            case "2" -> textField.setText(textField.getText()+"2");
-            case "9" -> textField.setText(textField.getText()+"9");
-            case "6" -> textField.setText(textField.getText()+"6");
-            case "3" -> textField.setText(textField.getText()+"3");
-            case "0" -> textField.setText(textField.getText()+"0");
-            case "-" -> {
-                sign = "-";
-                num = Integer.parseInt(textField.getText());
-                textField.setText("");
-            }
-            case "+" -> {
-                sign = "+";
-                num = Integer.parseInt(textField.getText());
-                textField.setText("");
-            }
-            case "/" -> {
-                sign = "/";
-                num = Integer.parseInt(textField.getText());
-                textField.setText("");
-            }
-            case "*" -> {
-                sign = "*";
-                num = Integer.parseInt(textField.getText());
-                textField.setText("");
-            }
-            case "x^2" -> {
-                sign = "x^2";
-                num = Integer.parseInt(textField.getText());
-                textField.setText("");
-            }
-            case "=" -> {
-                switch (sign){
-                    case "*" -> textField.setText(String.valueOf(num * Integer.parseInt(textField.getText())));
-                    case "/" -> textField.setText(String.valueOf(num / Integer.parseInt(textField.getText())));
-                    case "-" -> textField.setText(String.valueOf(num - Integer.parseInt(textField.getText())));
-                    case "+" -> textField.setText(String.valueOf(num + Integer.parseInt(textField.getText())));
-                    case "x^2" -> textField.setText(String.valueOf(num * num));
-                    case "√" -> textField.setText(String.valueOf(Math.sqrt(num)));
-                }
-            }
-            case "del" -> {
-                textField.setText("");
-                sign = "";
-                num = 0;
-            }
-            case "√"->{
-                sign = "√";
-                num = Integer.parseInt(textField.getText());
-                textField.setText("");
-            }
-        }
+    public void mouseDragged(MouseEvent e){
+        label.setText("X: "+e.getX()+" Y: "+e.getY());
+        Graphics g = getGraphics();
+
+        g.drawLine(x, y, e.getX(), e.getY());
+        x = e.getX();
+        y = e.getY();
     }
+
+    @Override
+    public void mouseMoved(MouseEvent e){
+
+    }
+
 }
