@@ -6,17 +6,15 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 
-public class Hero extends JButton implements ActionListener {
+public class Hero extends JButton {
 
-    private Image image;
-    int backgroundX;
-    private ImgThread imgThread;
-    private int pointX = 0;
+    Image image;
+    int backgrounX;
+    ImgThread imgThread;
     private boolean isRightPos = true;
 
     public Hero(String path)  {
         setLayout(null);
-        addActionListener(this);
 
         try {
             image = ImageIO.read(new File(path));
@@ -31,36 +29,36 @@ public class Hero extends JButton implements ActionListener {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        g.setColor(getBackground());
-        g.fillRect(0, 0, getWidth(), getHeight());
-        if(image != null){
+
+        if (image != null) {
             Graphics2D g2d = (Graphics2D) g.create();
             if(!isRightPos){
                 g2d.scale(-1, 1);
                 g2d.translate(-getWidth(), 0);
             }
-            g.drawImage(image, backgroundX, -40, 400, 200, this);
+            g2d.setColor(new Color(0, 0,0,0));
+            g2d.drawImage(image, backgrounX, -40, 900, 400, this);
+            g2d.dispose();
         } else {
             g.setColor(Color.RED);
             g.drawString("Не вдалося завантажити зображення!", 50, 50);
         }
     }
 
-    @Override
-    public void actionPerformed(ActionEvent e){
-        backgroundX = -100;
-        repaint();
-    }
-
     public void stepRight() {
-        isRightPos = true;
         setBounds(getX() + 100, getY(), getWidth(), getHeight());
-        repaint();
     }
 
     public void stepLeft() {
-        isRightPos = false;
         setBounds(getX() - 100, getY(), getWidth(), getHeight());
-        repaint();
+    }
+
+    public void stepUp() {
+        setBounds(getX(), getY() - 100, getWidth(), getHeight());
+    }
+
+    public void stepDown() {
+        setBounds(getX(), getY() + 100, getWidth(), getHeight());
     }
 }
+

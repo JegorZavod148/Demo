@@ -4,7 +4,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
-public class UI extends JFrame implements KeyListener, ActionListener {
+public class UI extends JFrame implements KeyListener, ActionListener{
 
     private Hero hero;
     private JButton settings;
@@ -13,16 +13,19 @@ public class UI extends JFrame implements KeyListener, ActionListener {
         setSize(1000, 700);
         setLayout(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        addKeyListener(this);
+
+        hero = new Hero("src/sd(1).png");
+        hero.setBounds(100, 200, 95, 120);
+        add(hero);
+
+        hero.addKeyListener(this);
+        setFocusable(true);
+        requestFocusInWindow();
 
         settings = new JButton("Settings");
         settings.setBounds(10, 10, 100, 30);
         settings.addActionListener(this);
         add(settings);
-
-        hero = new Hero("src/SPRITE.png");
-        hero.setBounds(100, 200, 100, 120);
-        add(hero);
 
         setVisible(true);
 
@@ -35,12 +38,18 @@ public class UI extends JFrame implements KeyListener, ActionListener {
 
     @Override
     public void keyPressed(KeyEvent e) {
-        switch (e.getKeyCode()) {
-            case KeyEvent.VK_D: // Код клавіші 'D'
+        switch (e.getKeyCode()){
+            case 39:
                 hero.stepRight();
                 break;
-            case KeyEvent.VK_A: // Код клавіші 'A'
+            case 37:
                 hero.stepLeft();
+                break;
+            case 38:
+                hero.stepUp();
+                break;
+            case 40:
+                hero.stepDown();
                 break;
         }
     }
@@ -52,6 +61,6 @@ public class UI extends JFrame implements KeyListener, ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        UISetting uiSetting = new UISetting(this);
+        new UISetting(this){};
     }
 }
