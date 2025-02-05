@@ -11,12 +11,12 @@ import java.util.HashMap;
 
 public class MyTelegramBot extends TelegramLongPollingBot {
 
-    HashMap<String, Integer> hashMap = new HashMap<>();
     UI ui;
-    String text;
+    private String id;
 
     public MyTelegramBot(UI ui) {
         this.ui = ui;
+        ui.setBot(this);
     }
 
     @Override
@@ -33,26 +33,23 @@ public class MyTelegramBot extends TelegramLongPollingBot {
     public void onUpdateReceived(Update update) {
         if (update.hasMessage() && update.getMessage().hasText()) {
             String userMessage = update.getMessage().getText();
-            String id = update.getMessage().getChatId().toString();
-
+            id = update.getMessage().getChatId().toString();
             ui.setTextField(userMessage);
 
-            if(hashMap.containsKey(id)){
-                hashMap.put(id, hashMap.get(id) + Integer.parseInt(userMessage));
-            } else {
-                hashMap.put(id, Integer.parseInt(userMessage));
-            }
+//            sendTo(userMessage);
+        }
+    }
 
-            String response = "Result: " + hashMap.get(id);
-            SendMessage message = new SendMessage();
-            message.setChatId(id);
-            message.setText(response);
+    public void sendTo(String text) {
+        SendMessage message = new SendMessage();
+        message.setChatId(id);
+        message.setText(text);
 
-            try {
-                execute(message);
-            } catch (TelegramApiException e) {
-                e.printStackTrace();
-            }
+        try {
+            execute(message);
+        } catch (TelegramApiException e) {
+            System.out.println(e.getMessage());
+            e.printStackTrace();
         }
     }
 

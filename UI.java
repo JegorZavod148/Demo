@@ -1,66 +1,52 @@
+package org.example;
+
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
+import java.awt.*;
 
-public class UI extends JFrame implements KeyListener, ActionListener{
+public class UI extends JFrame {
 
-    private Hero hero;
-    private JButton settings;
+    JTextField textField;
+    private JTextField iTextField;
+    private int y = 100;
+    private MyTelegramBot myTelegramBot;
 
-    UI () {
-        setSize(1000, 700);
-        setLayout(null);
+    UI(){
+        setBounds(0, 0, 1000, 700);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setLayout(null);
 
-        hero = new Hero("src/sd(1).png");
-        hero.setBounds(100, 200, 95, 120);
-        add(hero);
+        iTextField = new JTextField();
+        iTextField.setBounds(100, 50, 250, 30);
+        iTextField.setBackground(Color.BLACK);
+        iTextField.setForeground(Color.GREEN);
+        add(iTextField);
 
-        hero.addKeyListener(this);
-        setFocusable(true);
-        requestFocusInWindow();
-
-        settings = new JButton("Settings");
-        settings.setBounds(10, 10, 100, 30);
-        settings.addActionListener(this);
-        add(settings);
+        JButton button = new JButton("SEND___");
+        button.setBounds(450, 100, 150, 30);
+        button.setBackground(Color.BLACK);
+        button.setForeground(Color.GREEN);
+        button.addActionListener(e -> {
+            myTelegramBot.sendTo(iTextField.getText().trim());
+        });
+        add(button);
 
         setVisible(true);
-
     }
 
-    @Override
-    public void keyTyped(KeyEvent e) {
+    public void setTextField(String text) {
+        textField = new JTextField(text);
+        textField.setBounds(100, y, 250, 30);
+        textField.setBackground(Color.BLACK);
+        textField.setForeground(Color.GREEN);
+        textField.setOpaque(true);
+        textField.setEditable(false);
+        add(textField);
+        repaint();
 
+        y += 40;
     }
 
-    @Override
-    public void keyPressed(KeyEvent e) {
-        switch (e.getKeyCode()){
-            case 39:
-                hero.stepRight();
-                break;
-            case 37:
-                hero.stepLeft();
-                break;
-            case 38:
-                hero.stepUp();
-                break;
-            case 40:
-                hero.stepDown();
-                break;
-        }
-    }
-
-    @Override
-    public void keyReleased(KeyEvent e) {
-
-    }
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        new UISetting(this){};
+    public void setBot(MyTelegramBot myTelegramBot) {
+        this.myTelegramBot = myTelegramBot;
     }
 }
