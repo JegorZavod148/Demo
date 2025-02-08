@@ -7,16 +7,14 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MyTelegramBot extends TelegramLongPollingBot {
 
-    UI ui;
     private String id;
 
-    public MyTelegramBot(UI ui) {
-        this.ui = ui;
-        ui.setBot(this);
+    public MyTelegramBot() {
     }
 
     @Override
@@ -34,23 +32,41 @@ public class MyTelegramBot extends TelegramLongPollingBot {
         if (update.hasMessage() && update.getMessage().hasText()) {
             String userMessage = update.getMessage().getText();
             id = update.getMessage().getChatId().toString();
-            ui.setTextField(userMessage);
 
-//            sendTo(userMessage);
+            if (userMessage.equalsIgnoreCase("read")) {
+                sendSavedMessages();
+            } else {
+                DB.save(userMessage);
+                sendTo(id, "Повідомлення збережено");
+            }
         }
     }
 
-    public void sendTo(String text) {
+    public void sendTo(String chatId, String text) {
         SendMessage message = new SendMessage();
-        message.setChatId(id);
+        message.setChatId(chatId);
         message.setText(text);
 
         try {
             execute(message);
         } catch (TelegramApiException e) {
-            System.out.println(e.getMessage());
+            System.out.println("Помилка при відправці повідомлення: " + e.getMessage());
             e.printStackTrace();
         }
     }
 
+    public void sendSavedMessages() {
+        ArrayList<String> savedMessages = DB.read();
+        sendTo(id, savedMessages.toString());
+    }
+
+    public static void main(String[] args) {
+        try {
+            TelegramBotsApi botsApi = new TelegramBotsApi(DefaultBotSession.class);
+            botsApi.registerBot(new MyTelegramBot());
+            System.out.println("Бот запущено успішно!");
+        } catch (TelegramApiException e) {
+            e.printStackTrace();
+        }
+    }
 }
