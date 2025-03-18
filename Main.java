@@ -1,25 +1,10 @@
-package org.example;
-
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
-import java.net.URI;
-
 public class Main {
 
-    public static void main(String[] args) {
-        String apiUrl = "https://api.adviceslip.com/advice";
-        HttpClient client = HttpClient.newHttpClient();
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(apiUrl))
-                .GET()
-                .build();
+    //Це мій проект, невеличке казино, слоти. Щоб грати, треба натиснути кнопку КРУТИТИ.
+    //Якщо випаде три семірки, ви перемогли, відповідний напис з'вится на екрані.
+    //Але є секретна кнопка на клавіатурі, що автоматично робить вас переможцем. Можете спробувати знайти її))
 
-        try {
-            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-            System.out.println("Response: " + response.body());
-        } catch (Exception e) {
-            System.err.println(e.getMessage());
-        }
+    public static void main(String[] args) {
+        new LosAngeles();
     }
 }
